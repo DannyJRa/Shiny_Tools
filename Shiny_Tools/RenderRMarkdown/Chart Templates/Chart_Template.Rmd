@@ -1,0 +1,743 @@
+---
+title: "PowerBI"
+author: "Danny Rasch"
+date: '2017-03-09'
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    number_sections: yes
+geometry: margin = 1.2in
+fontsize: 10pt
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+#Load Dataset
+```{r}
+file="Boxplot1.csv"
+file="NFF_1.csv"
+
+dataset=read.csv(file,sep=",")
+
+colnames(dataset)
+str(dataset)
+types=sapply(dataset, class)
+types[2][1]=="factor"
+
+
+Type1=types[2]
+
+
+
+#### Option 2
+testVect <-sapply(dataset, class)
+
+######Example
+testVect <- structure(c("11.2.0.3.0", "12.89", "12.71"), .Names = c("db_version", 
+             "elapsed_time", "cpu_time"))
+
+#Named Characters to dataFrame
+data.frame(as.list(testVect))
+#Or if you want sensible data types for your columns
+datatypes<-data.frame(lapply(testVect, type.convert), stringsAsFactors=FALSE)
+#############3
+
+
+datatypes[1,1]=="factor"
+datatypes[1,2]=="factor"
+
+```
+
+# Libraries
+
+```{r}
+library(ggplot2)
+library(plotly)
+```
+
+## Boxplot1
+
+```{r pressure, echo=FALSE}
+#str(dataset)
+#sapply(dataset, class)
+
+
+d <-dataset
+
+p<-ggplot(data=d,mapping=aes(x=d$Symbol,y=d[,2]))
+p<-p+geom_boxplot()
+p
+
+P <- ggplotly(p)
+P
+
+```
+
+
+# 24 BOXPLOT WITH VARIABLE WIDTH
+
+
+Input
+
+X=Factor
+Y=Numeric
+Color=Factor (Default color scheme)
+
+
+
+## Example
+
+
+```{r}
+#Creating data 
+names=c(rep("A", 20) , rep("B", 8) , rep("C", 30), rep("D", 80))
+value=c( sample(2:5, 20 , replace=T) , sample(4:10, 8 , replace=T), 
+       sample(1:7, 30 , replace=T), sample(3:8, 80 , replace=T) )
+data=data.frame(names,value)
+ 
+ 
+# Calculate proportion of each level
+proportion=table(data$names)/nrow(data)
+ 
+#Draw the boxplot, with the width proportionnal to the occurence !
+boxplot(data$value ~ data$names , width=proportion , col=c("orange" , "seagreen"))
+ 
+
+```
+
+## Adapted
+
+```{r}
+# Calculate proportion of each level
+proportion=table(dataset[,1])/nrow(dataset)
+ 
+#Set color
+##################################### To do
+
+
+#Draw the boxplot, with the width proportionnal to the occurence !
+p=boxplot(dataset[,2] ~ dataset[,1] , width=proportion , col=c("orange" , "seagreen"))
+p
+```
+
+
+# Boxplot2
+
+Input
+
+X=Factor
+Y=Numeric
+Fill=Factor
+
+## Example
+
+```{r}
+library(ggthemes)
+g <- ggplot(mpg, aes(class, cty))
+g + geom_boxplot(aes(fill=factor(cyl))) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Box plot", 
+       subtitle="City Mileage grouped by Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+```
+
+
+## Original
+
+```{r}
+
+```
+
+
+## Customized
+
+# Boxplot & Dots
+
+On top of the information provided by a box plot, the dot plot can provide more clear information in the form of summary statistics by each group. The dots are staggered such that each dot represents one observation. So, in below chart, the number of dots for a given manufacturer will match the number of rows of that manufacturer in source data.
+
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+
+# plot
+g <- ggplot(mpg, aes(manufacturer, cty))
+g + geom_boxplot() + 
+  geom_dotplot(binaxis='y', 
+               stackdir='center', 
+               dotsize = .5, 
+               fill="red") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Box plot + Dot plot", 
+       subtitle="City Mileage vs Class: Each dot represents 1 row in source data",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+```
+
+
+# Boxplot with Plot_ly
+
+## Basic
+
+### Example
+```{r}
+library(plotly)
+p <- plot_ly(y = ~rnorm(50), type = "box") #%>%
+  #add_trace(y = ~rnorm(50, 1))
+p
+```
+### Dataset
+
+```{r}
+### PREP
+Y=dataset[,2]
+###
+
+library(plotly)
+p <- plot_ly(y = Y, type = "box") 
+p
+```
+
+
+## Horizontal Boxplot
+
+```{r}
+library(plotly)
+p <- plot_ly(x = ~rnorm(50), type = "box") %>%
+  add_trace(x = ~rnorm(50, 1))
+p
+```
+
+### Dataset
+
+```{r}
+### PREP
+X=dataset[,2]
+###
+
+library(plotly)
+p <- plot_ly(x = X, type = "box") 
+p
+```
+
+## Adding Jittered Points
+
+### Example
+```{r}
+p <- plot_ly(y = ~rnorm(50), type = "box", boxpoints = "all", jitter = 0.3,
+        pointpos = -1.8)
+p
+```
+### Dataset
+
+```{r}
+### PREP
+Y=dataset[,2]
+###
+
+p <- plot_ly(y = Y, type = "box", boxpoints = "all", jitter = 0.3,
+        pointpos = -1.8)
+p
+```
+
+## Several Box Plots
+
+### Example
+```{r}
+p <- plot_ly(ggplot2::diamonds, y = ~price, color = ~cut, type = "box")
+p
+```
+
+### Dataset
+```{r}
+### PREP
+Y=dataset[,2]
+COLOR=dataset[,1]
+###
+
+p <- plot_ly(dataset, y = Y, color = COLOR, type = "box")
+p
+```
+
+
+## Grouped Box Plots
+
+### Example
+
+```{r}
+p <- plot_ly(ggplot2::diamonds, x = ~cut, y = ~price, color = ~clarity, type = "box") %>%
+  layout(boxmode = "group")
+p
+
+```
+
+
+### Dataset Verson: A
+```{r}
+### PREP
+X=dataset[,1]
+Y=dataset[,2]
+COLOR=dataset[,3]
+###
+
+p <- plot_ly(dataset, x = X, y = Y, color = COLOR, type = "box") %>%
+  layout(boxmode = "group")
+p
+```
+### Dataset Verson: B
+```{r}
+### PREP
+X=dataset[,3]
+Y=dataset[,2]
+COLOR=dataset[,1]
+###
+
+p <- plot_ly(dataset, x = X, y = Y, color = COLOR, type = "box") %>%
+  layout(boxmode = "group")
+p
+```
+## Styling Outliers
+
+```{r}
+library(plotly)
+
+y1 <- c(0.75, 5.25, 5.5, 6, 6.2, 6.6, 6.80, 7.0, 7.2, 7.5, 7.5, 7.75, 8.15,
+       8.15, 8.65, 8.93, 9.2, 9.5, 10, 10.25, 11.5, 12, 16, 20.90, 22.3, 23.25)
+y2 <- c(0.75, 5.25, 5.5, 6, 6.2, 6.6, 6.80, 7.0, 7.2, 7.5, 7.5, 7.75, 8.15,
+        8.15, 8.65, 8.93, 9.2, 9.5, 10, 10.25, 11.5, 12, 16, 20.90, 22.3, 23.25)
+y3 <- c(0.75, 5.25, 5.5, 6, 6.2, 6.6, 6.80, 7.0, 7.2, 7.5, 7.5, 7.75, 8.15,
+        8.15, 8.65, 8.93, 9.2, 9.5, 10, 10.25, 11.5, 12, 16, 20.90, 22.3, 23.25)
+y4 <- c(0.75, 5.25, 5.5, 6, 6.2, 6.6, 6.80, 7.0, 7.2, 7.5, 7.5, 7.75, 8.15,
+        8.15, 8.65, 8.93, 9.2, 9.5, 10, 10.25, 11.5, 12, 16, 20.90, 22.3, 23.25)
+
+p <- plot_ly(type = 'box') %>%
+  add_boxplot(y = y1, jitter = 0.3, pointpos = -1.8, boxpoints = 'all',
+              marker = list(color = 'rgb(7,40,89)'),
+              line = list(color = 'rgb(7,40,89)'),
+              name = "All Points") %>%
+  add_boxplot(y = y2, name = "Only Whiskers", boxpoints = FALSE,
+              marker = list(color = 'rgb(9,56,125)'),
+              line = list(color = 'rgb(9,56,125)')) %>%
+  add_boxplot(y = y3, name = "Suspected Outlier", boxpoints = 'suspectedoutliers',
+              marker = list(color = 'rgb(8,81,156)',
+                            outliercolor = 'rgba(219, 64, 82, 0.6)',
+                            line = list(outliercolor = 'rgba(219, 64, 82, 1.0)',
+                                        outlierwidth = 2)),
+              line = list(color = 'rgb(8,81,156)')) %>%
+  add_boxplot(y = y4, name = "Whiskers and Outliers", boxpoints = 'outliers',
+              marker = list(color = 'rgb(107,174,214)'),
+              line = list(color = 'rgb(107,174,214)')) %>%
+  layout(title = "Box Plot Styling Outliers")
+p
+```
+
+
+# Violin Plot
+
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+
+# plot
+g <- ggplot(mpg, aes(class, cty))
+g + geom_violin() + 
+  labs(title="Violin plot", 
+       subtitle="City Mileage vs Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+
+######## Not working
+#library(plotly)
+#P <- ggplotly(g)
+#P
+```
+
+
+
+
+
+
+
+# 94 VIOLIN PLOT
+
+http://www.r-graph-gallery.com/94-violin-plot/
+
+```{r}
+# Charge the vioplot library
+library(vioplot)
+ 
+# Create data
+treatment=c(rep("A", 40) , rep("B", 40) , rep("C", 40) )
+value=c( sample(2:5, 40 , replace=T) , sample(c(1:5,12:17), 40 , replace=T), sample(1:7, 40 , replace=T) )
+data=data.frame(treatment,value)
+ 
+# Draw the plot
+with(data , vioplot( value[treatment=="A"] , value[treatment=="B"], value[treatment=="C"],  col=rgb(0.1,0.4,0.7,0.7) , names=c("A","B","C") ))
+ 
+
+```
+
+## Adaption ???
+
+```{r}
+# Draw the plot
+with(data , vioplot( value[treatment=="A"] , value[treatment=="B"], value[treatment=="C"],  col=rgb(0.1,0.4,0.7,0.7) , names=c("A","B","C") ))
+ 
+
+```
+
+
+
+
+
+
+
+
+
+
+# http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+
+
+# Scatterplot
+
+```{r}
+# install.packages("ggplot2")
+# load package and data
+options(scipen=999)  # turn-off scientific notation like 1e+48
+library(ggplot2)
+theme_set(theme_bw())  # pre-set the bw theme.
+data("midwest", package = "ggplot2")
+# midwest <- read.csv("http://goo.gl/G1K41K")  # bkup data source
+
+# Scatterplot
+gg <- ggplot(midwest, aes(x=area, y=poptotal)) + 
+  geom_point(aes(col=state, size=popdensity)) + 
+  geom_smooth(method="loess", se=F) + 
+  xlim(c(0, 0.1)) + 
+  ylim(c(0, 500000)) + 
+  labs(subtitle="Area Vs Population", 
+       y="Population", 
+       x="Area", 
+       title="Scatterplot", 
+       caption = "Source: midwest")
+
+plot(gg)
+```
+
+4 
+
+
+x=NUMERIC
+y=integer
+
+col=factor
+size=numeric
+
+```{r}
+X=dataset[,2]
+Y=dataset[,2]
+
+COL=dataset[,1]
+SIZE=dataset[,2]
+
+
+```
+
+
+
+
+
+```{r}
+# Scatterplot
+gg <- ggplot(dataset, aes(x=X, y=Y)) + 
+  geom_point(aes(col=COL, size=SIZE)) + 
+  geom_smooth(method="loess", se=F) + 
+  xlim(c(0, 50)) + 
+  ylim(c(0, 50)) + 
+  labs(subtitle="Area Vs Population", 
+       y="Population", 
+       x="Area", 
+       title="Scatterplot", 
+       caption = "Source: midwest")
+
+plot(gg)
+```
+
+# Density Plot
+
+For
+
+numeric
+numeric
+factor
+
+
+```{r}
+library(ggplot2)
+theme_set(theme_classic())
+
+# Plot
+g <- ggplot(mpg, aes(cty))
+g + geom_density(aes(fill=factor(cyl)), alpha=0.8) + 
+    labs(title="Density plot", 
+         subtitle="City Mileage Grouped by Number of cylinders",
+         caption="Source: mpg",
+         x="City Mileage",
+         fill="# Cylinders")
+```
+
+
+# Composition
+
+## Waffle
+
+```{r}
+var <- mpg$class  # the categorical data 
+
+## Prep data (nothing to change here)
+nrows <- 10
+df <- expand.grid(y = 1:nrows, x = 1:nrows)
+categ_table <- round(table(var) * ((nrows*nrows)/(length(var))))
+categ_table
+#>   2seater    compact    midsize    minivan     pickup subcompact        suv 
+#>         2         20         18          5         14         15         26 
+
+df$category <- factor(rep(names(categ_table), categ_table))  
+# NOTE: if sum(categ_table) is not 100 (i.e. nrows^2), it will need adjustment to make the sum to 100.
+
+## Plot
+ggplot(df, aes(x = x, y = y, fill = category)) + 
+        geom_tile(color = "black", size = 0.5) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_continuous(expand = c(0, 0), trans = 'reverse') +
+        scale_fill_brewer(palette = "Set3") +
+        labs(title="Waffle Chart", subtitle="'Class' of vehicles",
+             caption="Source: mpg") + 
+        theme(panel.border = element_rect(size = 2),
+              plot.title = element_text(size = rel(1.2)),
+              axis.text = element_blank(),
+              axis.title = element_blank(),
+              axis.ticks = element_blank(),
+              legend.title = element_blank(),
+              legend.position = "right")
+```
+
+
+## Pie Chart
+
+http://www.r-graph-gallery.com/128-ring-or-donut-plot/
+
+```{r}
+library(ggplot2)
+theme_set(theme_classic())
+
+# Source: Frequency table
+df <- as.data.frame(table(mpg$class))
+colnames(df) <- c("class", "freq")
+pie <- ggplot(df, aes(x = "", y=freq, fill = factor(class))) + 
+  geom_bar(width = 1, stat = "identity") +
+  theme(axis.line = element_blank(), 
+        plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", 
+       x=NULL, 
+       y=NULL, 
+       title="Pie Chart of class", 
+       caption="Source: mpg")
+
+pie + coord_polar(theta = "y", start=0)
+
+# Source: Categorical variable.
+# mpg$class
+pie <- ggplot(mpg, aes(x = "", fill = factor(class))) + 
+  geom_bar(width = 1) +
+  theme(axis.line = element_blank(), 
+        plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", 
+       x=NULL, 
+       y=NULL, 
+       title="Pie Chart of class", 
+       caption="Source: mpg")
+  
+pie + coord_polar(theta = "y", start=0)
+```
+
+
+
+## Treemap
+
+http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+
+```{r}
+
+library(ggplot2) 
+library(treemapify)
+proglangs <- read.csv("https://raw.githubusercontent.com/selva86/datasets/master/proglanguages.csv")
+
+# plot
+treeMapCoordinates <- treemapify(proglangs,
+                                 area = "value",
+                                 fill = "parent",
+                                 label = "id",
+                                 group = "parent")
+
+
+#Not working
+#treeMapPlot <- ggplotify(treeMapCoordinates) + 
+#                  scale_x_continuous(expand = c(0, 0)) +
+#                  scale_y_continuous(expand = c(0, 0)) +
+#                  scale_fill_brewer(palette = "Dark2")
+
+#print(treeMapPlot)
+
+```
+
+
+
+# Calendar Heatmap
+
+```{r}
+# http://margintale.blogspot.in/2012/04/ggplot2-time-series-heatmaps.html
+library(ggplot2)
+library(plyr)
+library(scales)
+library(zoo)
+
+df <- read.csv("https://raw.githubusercontent.com/selva86/datasets/master/yahoo.csv")
+df$date <- as.Date(df$date)  # format date
+df <- df[df$year >= 2012, ]  # filter reqd years
+
+# Create Month Week
+df$yearmonth <- as.yearmon(df$date)
+df$yearmonthf <- factor(df$yearmonth)
+df <- ddply(df,.(yearmonthf), transform, monthweek=1+week-min(week))  # compute week number of month
+df <- df[, c("year", "yearmonthf", "monthf", "week", "monthweek", "weekdayf", "VIX.Close")]
+head(df)
+#>   year yearmonthf monthf week monthweek weekdayf VIX.Close
+#> 1 2012   Jan 2012    Jan    1         1      Tue     22.97
+#> 2 2012   Jan 2012    Jan    1         1      Wed     22.22
+#> 3 2012   Jan 2012    Jan    1         1      Thu     21.48
+#> 4 2012   Jan 2012    Jan    1         1      Fri     20.63
+#> 5 2012   Jan 2012    Jan    2         2      Mon     21.07
+#> 6 2012   Jan 2012    Jan    2         2      Tue     20.69
+
+
+# Plot
+ggplot(df, aes(monthweek, weekdayf, fill = VIX.Close)) + 
+  geom_tile(colour = "white") + 
+  facet_grid(year~monthf) + 
+  scale_fill_gradient(low="red", high="green") +
+  labs(x="Week of Month",
+       y="",
+       title = "Time-Series Calendar Heatmap", 
+       subtitle="Yahoo Closing Price", 
+       fill="Close")
+```
+
+
+```{r}
+# devtools::install_github("hrbrmstr/ggalt")
+library(ggplot2)
+library(ggalt)
+library(ggfortify)
+theme_set(theme_classic())
+
+# Compute data with principal components ------------------
+df <- iris[c(1, 2, 3, 4)]
+pca_mod <- prcomp(df)  # compute principal components
+
+# Data frame of principal components ----------------------
+df_pc <- data.frame(pca_mod$x, Species=iris$Species)  # dataframe of principal components
+df_pc_vir <- df_pc[df_pc$Species == "virginica", ]  # df for 'virginica'
+df_pc_set <- df_pc[df_pc$Species == "setosa", ]  # df for 'setosa'
+df_pc_ver <- df_pc[df_pc$Species == "versicolor", ]  # df for 'versicolor'
+ 
+# Plot ----------------------------------------------------
+ggplot(df_pc, aes(PC1, PC2, col=Species)) + 
+  geom_point(aes(shape=Species), size=2) +   # draw points
+  labs(title="Iris Clustering", 
+       subtitle="With principal components PC1 and PC2 as X and Y axis",
+       caption="Source: Iris") + 
+  coord_cartesian(xlim = 1.2 * c(min(df_pc$PC1), max(df_pc$PC1)), 
+                  ylim = 1.2 * c(min(df_pc$PC2), max(df_pc$PC2))) +   # change axis limits
+  geom_encircle(data = df_pc_vir, aes(x=PC1, y=PC2)) +   # draw circles
+  geom_encircle(data = df_pc_set, aes(x=PC1, y=PC2)) + 
+  geom_encircle(data = df_pc_ver, aes(x=PC1, y=PC2))
+```
+
+8. Spatial
+The ggmap package provides facilities to interact with the google maps api and get the coordinates (latitude and longitude) of places you want to plot. The below example shows satellite, road and hybrid maps of the city of Chennai, encircling some of the places. I used the geocode() function to get the coordinates of these places and qmap() to get the maps. The type of map to fetch is determined by the value you set to the maptype.
+
+You can also zoom into the map by setting the zoom argument. The default is 10 (suitable for large cities). Reduce this number (up to 3) if you want to zoom out. It can be zoomed in till 21, suitable for buildings.
+```{r, eval=FALSE, include=FALSE}
+# Better install the dev versions ----------
+# devtools::install_github("dkahle/ggmap")
+# devtools::install_github("hrbrmstr/ggalt")
+
+# load packages
+library(ggplot2)
+library(ggmap)
+library(ggalt)
+
+# Get Chennai's Coordinates --------------------------------
+chennai <-  geocode("Chennai")  # get longitude and latitude
+
+# Get the Map ----------------------------------------------
+# Google Satellite Map
+chennai_ggl_sat_map <- qmap("chennai", zoom=12, source = "google", maptype="satellite")  
+
+# Google Road Map
+chennai_ggl_road_map <- qmap("chennai", zoom=12, source = "google", maptype="roadmap")  
+
+# Google Hybrid Map
+chennai_ggl_hybrid_map <- qmap("chennai", zoom=12, source = "google", maptype="hybrid")  
+
+# Open Street Map
+chennai_osm_map <- qmap("chennai", zoom=12, source = "osm")   
+
+# Get Coordinates for Chennai's Places ---------------------
+chennai_places <- c("Kolathur",
+                    "Washermanpet",
+                    "Royapettah",
+                    "Adyar",
+                    "Guindy")
+
+places_loc <- geocode(chennai_places)  # get longitudes and latitudes
+
+
+# Plot Open Street Map -------------------------------------
+chennai_osm_map + geom_point(aes(x=lon, y=lat),
+                             data = places_loc, 
+                             alpha = 0.7, 
+                             size = 7, 
+                             color = "tomato") + 
+                  geom_encircle(aes(x=lon, y=lat),
+                                data = places_loc, size = 2, color = "blue")
+
+# Plot Google Road Map -------------------------------------
+chennai_ggl_road_map + geom_point(aes(x=lon, y=lat),
+                                  data = places_loc, 
+                                  alpha = 0.7, 
+                                  size = 7, 
+                                  color = "tomato") + 
+                       geom_encircle(aes(x=lon, y=lat),
+                                     data = places_loc, size = 2, color = "blue")
+
+# Google Hybrid Map ----------------------------------------
+chennai_ggl_hybrid_map + geom_point(aes(x=lon, y=lat),
+                                     data = places_loc, 
+                                     alpha = 0.7, 
+                                     size = 7, 
+                                     color = "tomato") + 
+                          geom_encircle(aes(x=lon, y=lat),
+                                        data = places_loc, size = 2, color = "blue")
+```
+

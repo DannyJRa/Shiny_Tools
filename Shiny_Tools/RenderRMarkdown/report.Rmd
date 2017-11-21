@@ -1,0 +1,34 @@
+---
+title: "Dynamic report"
+output: html_document
+params:
+  n: NA
+  x: NA
+---
+  
+```{r}
+# The `params` object is available in the document.
+params$n
+params$x
+```
+
+A plot of `params$n` random points.
+
+```{r}
+#plot(rnorm(params$n), rnorm(params$n))
+```
+
+```{r}
+#setwd("C:/OneDrive/7_DataScience/02_Visual Studio/2_GitHub/Shiny_Tools/Shiny_Tools/Shinydashboard/render")
+#load("global.RData")
+a=Test1
+a
+```
+
+```{r}
+
+#b=input$slider
+#b
+```
+
+
