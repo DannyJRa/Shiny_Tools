@@ -110,9 +110,9 @@ shinyUI(navbarPage("Shiny-Explorer", position="fixed-top",
             htmlOutput("analysis")
           ),
           tabPanel("Source",
-            aceEditor("acermd", mode="markdown"))
+            aceEditor("acermd", mode="markdown")
         ),
-          tabPanel("Plots","test")
+        tabPanel("Source2","Plots")
         )
       ) # mainPanel
       
