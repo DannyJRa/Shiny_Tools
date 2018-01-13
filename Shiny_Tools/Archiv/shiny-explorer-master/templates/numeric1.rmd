@@ -1,0 +1,73 @@
+```{r debug, echo=FALSE}
+require(ggplot2, quietly=T)
+require(highr)
+opts_chunk$set(comment="") # remove the comment symbol from knitr output
+opts_chunk$set(message=F, warning=F) # unless debugging
+
+# # the default output hook
+# hook_source = knit_hooks$get('source')
+# knit_hooks$set(source = function(x, options) {
+#   hook_source(x, options)
+#   hilight(x, format="html")
+# })
+```
+# Analysis: 1 numeric
+
+## Inputs
+
+Selected 1 numeric variable in dataframe mydf
+* numeric1
+
+## Summary statistics
+
+```{r summary}
+# summary
+summary(mydf[,"numeric1"])
+```
+
+## Index plot
+
+```{r indexplot, fig.width=7, fig.height=6}
+plot(mydf[,"numeric1"])
+```
+
+
+## Spread of values
+
+```{r histo, fig.width=7, fig.height=6, warning=FALSE, message=FALSE}
+ggplot(mydf, aes(x=numeric1)) +
+  geom_histogram()
+```
+
+```{r boxplot, fig.width=7, fig.height=6, warning=FALSE, message=FALSE}
+ggplot(mydf, aes(x=factor(1), y=numeric1)) +
+  geom_boxplot()
+```
+
+## Distribution
+
+```{r normality, fig.width=7, fig.height=6}
+dkPlotNormality(mydf[,"numeric1"])
+```
+
+### Shapiro-Wilk test of normality
+
+```{r ShapWilk, comment=NA}
+shapiro.test(mydf[,"numeric1"])
+```
+
+<% if (shapiro.test(mydf$numeric1)$p.value < 0.05) { %>
+**Warning:** The Shapiro-Wilk p value is < 0.05 indicating that mydf$numeric1 significantly departs from normality.
+Consider transforming the variable or using non-parametric tests.
+<% } %>
+
+### Log transformation
+
+Consider using a log transformation for positive skew (long right tail).
+
+```{r histolog, fig.width=7, fig.height=6, warning=FALSE, message=FALSE}
+ggplot(mydf, aes(x=log(numeric1))) +
+  geom_histogram() +
+  geom_density()
+```
+

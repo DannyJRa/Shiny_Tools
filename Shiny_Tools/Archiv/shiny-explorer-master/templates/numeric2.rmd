@@ -1,0 +1,128 @@
+```{r setup, echo=FALSE}
+require(ggplot2, quietly=T)
+require(grid, quietly=T)
+opts_chunk$set(comment="") # remove the comment symbol from knitr output
+opts_chunk$set(message=F, warning=F) # unless debugging
+```
+
+# Analysis: 2 Numerics
+
+## Inputs
+
+Selected variables in dataframe mydf
+* numeric1
+* numeric2
+
+## Summary statistics
+
+```{r summary}
+summary(mydf[, c("numeric1","numeric2")])
+```
+
+## Scatter Plot
+
+```{r scatterplot, fig.width=7, fig.height=6}
+ggplot(mydf, aes(x=numeric1, y=numeric2)) +
+  geom_point() +
+  geom_smooth()
+```
+
+## Correlation Matrix
+
+```{r corrplot, fig.width=7, fig.height=6}
+dkPairs(mydf[,c("numeric1", "numeric2")])
+```
+
+```{r corrplot2, fig.width=7, fig.height=6}
+require(ez, quietly=T) 
+ezCor(mydf[,c("numeric1", "numeric2")])
+```
+
+## Correlation Tests
+
+Correlation coefficient (measure of how linear 1.0 = straight line). Values of > 0.7 are generally considered a large effect size.
+
+```{r pearson}
+with(mydf, cor(numeric1, numeric2))
+```
+
+Test of significance of correlation coefficient: Pearson
+
+```{r cortest}
+with(mydf, cor.test(numeric1, numeric2))
+```
+
+### Reporting Correlations
+
+<% if (cor.test(mydf$numeric1, mydf$numeric2)$p.value < 0.05) { %> 
+There is a significant relationship between numeric1 and numeric2, *r=`r cor(mydf$numeric1, mydf$numeric2)`, `r dkpval(cor.test(mydf$numeric1, mydf$numeric2)$p.value)`*.
+<% } else { %>
+There is no significant relationship between numeric1 and numeric2 (Pearson p>0.05)
+<% } %>
+
+### R^2
+
+R^2 indicates how much of the variation in x1 is shared (and potentially explained by) x2.
+
+```{r r2}
+with(mydf, cor(numeric1, numeric2)^2)
+```
+
+### Non-parametric tests
+
+Test of significance: Spearman (non-parametric)
+
+```{r spearman}
+with(mydf, cor.test(numeric1, numeric2, method="spearman"))
+```
+
+Test of significance: Kendall's Tau (non-parametric). Use if small dataset with many tied ranks.
+
+```{r kendall}
+table(mydf$numeric1)[table(mydf$numeric1)>1]
+table(mydf$numeric2)[table(mydf$numeric2)>1]
+with(mydf, cor.test(numeric1, numeric2, method="kendall"))
+```
+
+## Regression
+
+Regression fits a straight line to the data and finds it's slope. Regression tests check if the slope is different to 0. To interpret:
+- Check that the *model* p value is < 0.05
+- Examine the R squared value - this describes what proportion of the variability is explained by the model
+- Check the *parameter* p values - this measures if the parameter slope is significantly different from 0
+
+```{r regression}
+mylm = lm(numeric2~numeric1, data=mydf)
+summary(mylm)
+```
+
+```{r regressionplot}
+ggplot(mydf, aes(x=numeric1, y=numeric2)) + 
+  geom_smooth(method="lm", colour="red", size=1)  
+```
+
+### Regression Diagnostics
+
+The following graph plots the residual values against the fitted values. The dotted line is the regression line rotated to become horizontal. The y axis measures the distance of each data point from the regression line. To meet the regression assumptions the graph should show the residuals are randomly distributed about the horizontal line:
+- The spread of the residuals does not change along the x axis (homoskedasticity)
+- The residuals are evenly positioned above and below the regression line along the x axis (there is no pattern to location)
+
+```{r}
+autoplot(mylm, which=1:6, mfrow=c(3,2))
+```
+
+#### Check for outliers
+
+Are there any points that dramatically alter the 
+
+```{r}
+dfbeta(mylm)
+```
+
+
+## Paired T-Test
+
+```{r}
+  t.test(mydf$numeric1, mydf$numeric2, paired=T)
+```
+

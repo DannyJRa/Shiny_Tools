@@ -1,0 +1,174 @@
+#analysis .source pre.knitr {
+    margin-top: 0;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    padding: 0.5em;
+    line-height: 12pt;
+    background-color: white;
+}
+
+#analysis .output pre.knitr {
+    margin-top: 0;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    padding: 0.5em;
+    line-height: 12pt
+}
+
+/*#analysis pre {
+    margin-top: 0;
+    max-width: 95%;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    padding: 0px;
+    padding-right: -10px;
+    line-height: 12pt
+}
+
+#analysis code {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    max-width: 100%;
+}
+
+#analysis pre code {
+    border: none;
+    padding: 0.5em;
+    background-color: white;
+    display: block;
+}
+
+#analysis code.r, code.cpp {
+   background-color: #F8F8F8;
+}*/
+
+.panel-body {
+  background-color: rgb(245,245,245);
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.panel-default>.panel-heading {
+  background-color: rgb(230,230,230);
+}
+
+.panel-heading a:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+
+    float: right;        /* adjust as needed */
+    color: grey;         /* adjust as needed */
+}
+.panel-heading a.collapsed:after {
+    /* symbol for "collapsed" panels */
+        content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+
+}
+
+
+.nav {
+  margin-bottom: 10px;
+}
+
+.selectize-name {
+  display: block;
+}
+
+.selectize-caption {
+  display: block;
+  opacity: 0.5;
+}
+
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+   
+.hl.num {
+  color: #AF0F91;
+}
+.hl.str {
+  color: #317ECC;
+}
+.hl.com {
+  color: #AD95AF;
+  font-style: italic;
+}
+.hl.opt {
+  color: #000000;
+}
+.hl.std {
+  color: #585858;
+}
+.hl.kwa {
+  color: #295F94;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #B05A65;
+}
+.hl.kwc {
+  color: #55aa55;
+}
+.hl.kwd {
+  color: #BC5A65;
+  font-weight: bold;
+}
+   
+   #analysis h2:not(.author)
+    {
+    /* Put border on bottom to separate it from body. */
+    /* TODO: need a color or something to make the H2 stand out. Line doesn't look good if followed by code block*/
+    /* border-bottom: 1px solid #aaa;
+    margin-bottom: 0.5em;*/
+    color: #0973A8;
+    }
+    
+    #analysis h1:not(.author)
+    {
+    /* Put border on bottom to separate it from body. */
+    /* TODO: need a color or something to make the H2 stand out. Line doesn't look good if followed by code block*/
+    /* border-bottom: 1px solid #aaa;
+    margin-bottom: 0.5em;*/
+    color: #0973A8;
+
+    }
+    
+#analysis div#toc
+    {
+    /* Put border on bottom to separate it from body. */
+    border-top: 1px solid #0669FD;
+    margin-top: 1em;
+    border-bottom: 1px solid #0669FD;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    }
