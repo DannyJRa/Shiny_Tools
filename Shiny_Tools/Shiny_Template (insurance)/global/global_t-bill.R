@@ -1,5 +1,5 @@
 library(shiny)
-#library(tychobratools)
+library(tychobratools)
 library(highcharter)
 library(DT)
 library(shinythemes)
@@ -14,7 +14,7 @@ library(lubridate)
 #t_bill_10 <- quantmod::getSymbols('DGS10', src='FRED', auto.assign = FALSE)
 
 # annual treasury bills
-t_bills <- readr::read_csv("t-bills.csv")
+t_bills <- readr::read_csv("./data/t-bills.csv")
 t_bills$date <- as.Date(t_bills$date, format = "%m/%d/%Y")
 
 t_bill_1 <- xts(x = t_bills[, "t_1"], order.by = t_bills$date)

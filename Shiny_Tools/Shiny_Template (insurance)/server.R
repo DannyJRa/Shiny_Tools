@@ -1,4 +1,7 @@
 
+
+
+
 hc_btn_options <- list(
   contextButton = list(
     menuItems = list(
@@ -39,7 +42,13 @@ loss_run <- function(val_date) {
 
 
 function(input, output) {
+
+
+
   
+  
+  
+    
   output$debuggin <- renderPrint({
     input$val_date
   })
@@ -51,7 +60,9 @@ function(input, output) {
   
   source("server/01-dashboard-srv.R", local = TRUE)
   source("server/02-changes-srv.R", local = TRUE)
-  
+  source("server/03-simulation-srv.R", local = TRUE)
+#
+  source("server/04-t-bill-server.R", local = TRUE)
   ### table tab
   output$trans_tbl <- DT::renderDataTable({
     out <- val_tbl() %>%
@@ -85,4 +96,18 @@ function(input, output) {
       )
   }, server = FALSE)
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

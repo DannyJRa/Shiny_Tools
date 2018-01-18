@@ -16,7 +16,10 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
     menuItem("Claim Changes", tabName = "changes", icon = icon("balance-scale")),
-    menuItem("Claims Table", tabName = "table", icon = icon("table"))
+    menuItem("Claims Table", tabName = "table", icon = icon("table")),
+    menuItem("Simulation",tabName="simulation",icon = icon("table"))
+    
+    ,menuItem("T-Bill",tabName="t-bill",icon = icon("table"))
   )
 )
 
@@ -28,6 +31,8 @@ body <- dashboardBody(
   tabItems(
     source("ui/01-dashboard-ui.R", local = TRUE)$value,
     source("ui/02-changes-ui.R", local = TRUE)$value,
+    source("ui/03-simulation-ui.R", local = TRUE)$value,
+    source("ui/04-t-bill-ui.R", local = TRUE)$value,
     tabItem(
       tabName = "table",
       fluidRow(
@@ -35,7 +40,27 @@ body <- dashboardBody(
           width = 12,
           DT::dataTableOutput("trans_tbl")
         )
+      ),
+      fluidRow(
+        column(
+          width = 12,
+          class = "text-center",
+          br(),
+          br(),
+          hr(),
+          h1("Historical Treasury Yields"),
+          h3("(For Your Reference in Making Parameter Selections in Above Walk)"),
+          br()
+        )
       )
+      
+    
+      
+      ###############################
+      
+      
+      
+      
     )
   )
 )
