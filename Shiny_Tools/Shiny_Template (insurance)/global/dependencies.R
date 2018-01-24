@@ -16,3 +16,24 @@ lapply(dependencies, library, character.only = TRUE)
 
 
 rm(dependencies, new.packages)
+
+
+library(shiny)
+library(shinydashboard)
+library(tibble)
+library(dplyr)
+library(highcharter)
+library(DT)
+library(lubridate)
+library(tidyr)
+library(shinyWidgets)
+library(shinyjs)
+library(shinycssloaders)
+library(rhandsontable)
+library(shiny)
+#library(tychobratools)
+
+library(shinythemes)
+library(sde)
+library(readr)
+library(xts)

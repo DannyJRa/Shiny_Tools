@@ -15,18 +15,7 @@ sourceDir <- function(path, trace = TRUE, ...) {
 # loading modules 
 sourceDir("global", trace = FALSE)
 
-library(shiny)
-library(shinydashboard)
-library(tibble)
-library(dplyr)
-library(highcharter)
-library(DT)
-library(lubridate)
-library(tidyr)
-library(shinyWidgets)
-library(shinyjs)
-library(shinycssloaders)
-library(rhandsontable)
+
 
 trans <- readRDS("./data/trans.RDS")
 
