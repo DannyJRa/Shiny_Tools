@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://index3.html/index.html</loc>
+    <lastmod>2018-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>http://index3.html/images/pasted%20image%20204x114-crop-u127.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>http://index3.html/images/pasted%20image%20190x174.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>http://index3.html/unbenannt-2.html</loc>
+    <lastmod>2018-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
